@@ -1,1 +1,1 @@
-# choroid plexus segmentation Pipeline
+# Choroid Plexus Segmentation Pipeline
