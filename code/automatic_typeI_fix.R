@@ -1,4 +1,4 @@
-#.libPaths(c("/misc/appl/R-4.1/lib64/R/library","/home/zhengren/Desktop/cluster_set_up/r_packages"))
+
 library(neurobase)
 library(tidyverse)
 library(oro.nifti)
@@ -7,11 +7,8 @@ library(WhiteStripe)
 library(fslr)
 library(extrantsr)
 library(ANTsR)
-#library(ANTsRNet) #install via devtools::install_github( "ANTsX/ANTsRNet" )
-#library(tensorflow)
 library(freesurfer)
-# library(argparser)
-source("/home/zhengren/Desktop/Project/uvm_40_patients/code/choroid_plexus/TypeI_fixing.R")
+source("/home/zhengren/Desktop/Project/choroid_plexus_segmentation/code/choroid_plexus/TypeI_fixing.R")
 
 main_dir = "/home/zhengren/Desktop/Project/uvm_40_patients/choroid_plexus"
 patient = list.files(paste0(main_dir, "/automatic_pipeline"))
