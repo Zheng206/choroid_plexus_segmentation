@@ -1,4 +1,3 @@
-
 library(neurobase)
 library(tidyverse)
 library(oro.nifti)
@@ -8,10 +7,12 @@ library(fslr)
 library(extrantsr)
 library(ANTsR)
 library(freesurfer)
-source("/home/zhengren/Desktop/Project/choroid_plexus_segmentation/code/choroid_plexus/TypeI_fixing.R")
+source("code/TypeI_fixing.R")
 
-main_dir = "/home/zhengren/Desktop/Project/uvm_40_patients/choroid_plexus"
+
+main_dir = "./choroid_plexus"
 patient = list.files(paste0(main_dir, "/automatic_pipeline"))
+patient = patient[which(!grepl("MSDC_*|fsaverage", patient))]
 aseg_img_files = list.files(path = main_dir, pattern = "^aseg.mgz", recursive = TRUE, full.names = TRUE)
 brain_img_files = list.files(path = main_dir, pattern = "^brain.mgz", recursive = TRUE, full.names = TRUE)
 
@@ -33,13 +34,18 @@ typeI_fix_run = function(p, aseg_img_files, brain_img_files, thre, main_dir){
     label = ants2oro(labelClusters(oro2ants(choroid_plexus),minClusterSize = 20))
     df = get_cluster_index(p, label)
     df$threshold = thre
-    p_new = str_split(p,"_")[[1]][2]
-    fix_typeI_seg(df, thre, label, reoriented_img, paste0(main_dir, "/automatic_pipeline/", p, "/", p_new, "/mri"))
+    df = fix_typeI_seg(p, df, thre, label, reoriented_img, main_dir)
     return(df)
 }
 
-#i = as.numeric(Sys.getenv("LSB_JOBINDEX"))
-summary_df = parallel::mclapply(1:length(patient), function(i) typeI_fix_run(patient[i], aseg_img_files, brain_img_files, 0.2, main_dir),
-                        mc.cores = future::availableCores()) %>% dplyr::bind_rows()
-#summary_df = typeI_fix_run(patient[i], aseg_img_files, brain_img_files, 0.2, main_dir)
-write_csv(summary_df,paste0(main_dir, "/quality_check/quality_summary.csv"))
+args = commandArgs(trailingOnly = TRUE)
+p = str_split(args[1], "=")[[1]][2]
+thre = as.numeric(str_split(args[2], "=")[[1]][2])
+
+
+summary_df = typeI_fix_run(p, aseg_img_files, brain_img_files, thre, main_dir)
+out = paste0(main_dir, "/quality_check/",p)
+dir.create(out)
+write_csv(summary_df,paste0(out, "/quality_summary_", p, ".csv"))
+
+

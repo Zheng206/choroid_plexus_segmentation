@@ -23,25 +23,50 @@ get_cluster_index = function(p, label){
   df$subject = p
   return(df)}
 
-exc_index = function(df, thre){
-  avg = df %>% filter(cluster %in% c(1,2)) %>% pull(X2) %>% mean()
-  other = df %>% filter(!cluster %in% c(1,2)) %>% pull(X2)
-  if (length(other) != 0){
-  diff = sapply(other, function(x) (x-avg)/avg, USE.NAMES = FALSE)}else{diff = 0}
-  exc = which(diff > thre) + 2
-  return(exc)}
+exc_index = function(df, label, thre){
+  diff_2 = abs(diff(df$X2[1:2]))/min(df$X2[1:2])
+  if (diff_2 < thre){
+    avg = df %>% filter(cluster %in% c(1,2)) %>% pull(X2) %>% mean()
+    other = df %>% filter(!cluster %in% c(1,2)) %>% pull(X2)
+    if (length(other) != 0){
+    diff = sapply(other, function(x) abs((x-avg)/avg), USE.NAMES = FALSE)}else{diff = 0}
+    exc = which(diff > thre) + 2
+    extra_df = data.frame()
+    }else{
+      ind_max = which(df$X2[1:2] == max(df$X2[1:2]))
+      ind_min = which(df$X2[1:2] == min(df$X2[1:2]))
+      avg = df %>% filter(cluster %in% c(1,2,3)[-ind_max]) %>% pull(X2) %>% mean()
+      extra_df = data.frame(which(label == ind_max, arr.ind=TRUE)) %>% filter(dim2 <= avg*(1+thre))
+      other = df %>% filter(!cluster %in% c(1,2,3)[-ind_max]) %>% pull(X2)
+      if (length(other) != 0){
+      diff = sapply(other, function(x) abs((x-avg)/avg), USE.NAMES = FALSE)}else{diff = 0}
+      exc = c(ind_max, which(diff[-1] > thre) + 2)
+    }
+  return(list(exc, extra_df))}
 
 
-fix_typeI_seg = function(df, thre, label, orig, out){
-  exc = exc_index(df, thre)
-  mask = !(label %in% exc | label == 0)
+fix_typeI_seg = function(p, df, thre, label, orig, out){
+  exc = exc_index(df, label, thre)[[1]]
+  extra_df = exc_index(df, label, thre)[[2]]
+  
+  if(nrow(extra_df)== 0){
+    mask = !(label %in% exc | label == 0)}else{
+      mask = !(label %in% exc | label == 0)
+      for(i in 1:nrow(extra_df)) {
+        mask[extra_df[[i,"dim1"]], extra_df[[i,"dim2"]], extra_df[[i,"dim3"]]] = 1
+      }
+    }
   cp = mask * orig
   other = (!(orig == 31 | orig == 63)) * orig
   img_edit = other + cp
   message("saving edited segmentation...........")
-  writenii(img_edit, paste0(out, "/aseg_editted"))
-  mri_convert(img_edit, outfile = paste0(out, "/aseg_editted.mgz"))
-  writenii(mask, paste0(out, "/choroid_plexus_editted_mask"))
+  #writenii(img_edit, paste0(out, "/aseg_editted"))
+  mri_convert(img_edit, outfile = paste0(out, "/automatic_pipeline/", p, "/mri/aseg_editted.mgz"))
+  writenii(mask, paste0(out, "/editted/", p, "/choroid_plexus_editted_mask"))
+  df$exclude_status = sapply(df$cluster, function(x){
+    if(x %in% exc){return("Yes")}else{return("No")}
+  }, USE.NAMES = FALSE)
+  return(df)
 }
 
 

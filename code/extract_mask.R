@@ -7,15 +7,16 @@ library(extrantsr)
 library(ANTsR)
 library(freesurfer)
 
-main_dir = "/home/zhengren/Desktop/Project/uvm_40_patients/choroid_plexus"
+main_dir = "choroid_plexus"
 
 ### Extract Volume Data
 aseg_files = list.files(pattern = "aseg_eitted.stats", recursive = TRUE, full.names = TRUE)
 #aseg_files = aseg_files[which(grepl("stats/", aseg_files))]
 patient = list.files(paste0(main_dir, "/automatic_pipeline"))
+patient = patient[which(!grepl("fsaverage", patient))]
 
 extract_data_f = function(x){
-  p = str_split(x, "/")[[1]][9]
+  p = str_split(x, "/")[[1]][4]
   out = read_aseg_stats(x)
   measure_df = out$measures %>% select(measure, value, units) %>% mutate(measure = paste0(measure, "_", units)) %>% select(measure, value) %>% pivot_wider(names_from = "measure", values_from = "value")
   measure_df$subject_id = p
