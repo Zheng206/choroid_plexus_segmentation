@@ -29,12 +29,11 @@ Main Directory: UVM_data (as you name)
 >       * automatic_typeI_fix.R
 >       * extract_mask.R
 >       * recon_all.sh
->       * run_segmentation_fix.sh
 >       * seg_edit.sh
 >       * TypeI_fixing.R
 >   * license
 >       * license.txt
-        * ASegStatsLUT.txt
+>       * ASegStatsLUT.txt
 >   * choroid_plexus
 >       * automatic_pipeline
 >       * editted
