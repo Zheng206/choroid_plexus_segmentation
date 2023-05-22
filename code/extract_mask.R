@@ -8,9 +8,9 @@ library(ANTsR)
 library(freesurfer)
 
 main_dir = "choroid_plexus"
-
+args = commandArgs(trailingOnly = TRUE)
 ### Extract Volume Data
-aseg_files = list.files(pattern = "aseg_eitted.stats", recursive = TRUE, full.names = TRUE)
+aseg_files = list.files(pattern = args, recursive = TRUE, full.names = TRUE)
 #aseg_files = aseg_files[which(grepl("stats/", aseg_files))]
 patient = list.files(paste0(main_dir, "/automatic_pipeline"))
 patient = patient[which(!grepl("fsaverage", patient))]

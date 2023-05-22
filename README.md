@@ -128,5 +128,5 @@ bsub -J seg_fix -o out.log -e err.log singularity run --cleanenv \
     -B /scratch \
     --env FS_LICENSE=$PWD/license/license.txt \
     --env SURFER_FRONTDOOR=1 \
-    $sin_path Rscript $PWD/code/extract_mask.R
+    $sin_path Rscript $PWD/code/extract_mask.R "aseg_editted.mgz"
 ```
