@@ -55,7 +55,7 @@ mkdir choroid_plexus/volume
 ## Set up Singularity 
 
 ```bash
-module load singularity/3.8.3 
+module load singularity
 # you may have a different version of singularity on your cluster, please check for the right version.
 
 sin_path=/path/to/save/image/neuror.sif
