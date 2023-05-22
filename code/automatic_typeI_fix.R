@@ -31,7 +31,7 @@ typeI_fix_run = function(p, aseg_img_files, brain_img_files, thre, main_dir){
     other_region = reoriented_img * (!choroid_plexus)
     writenii(choroid_plexus, paste0(out.dir, "/choroid_plexus_orig_mask"))
     writenii(reoriented_brain, paste0(out.dir, "/brain"))
-    label = ants2oro(labelClusters(oro2ants(choroid_plexus),minClusterSize = 20))
+    label = ants2oro(labelClusters(oro2ants(choroid_plexus),minClusterSize = 1))
     df = get_cluster_index(p, label)
     df$threshold = thre
     df = fix_typeI_seg(p, df, thre, label, reoriented_img, main_dir)

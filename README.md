@@ -99,7 +99,6 @@ Upon finishing the Type I Issue fixing step, make sure to conduct a quality chec
 Then run Type I fixing for patients that require a different threshold:
 
 * 20140213-1445
-* 20140730-1059
 * 20160615-1501
 
 ```bash
