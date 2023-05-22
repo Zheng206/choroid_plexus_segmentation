@@ -16,7 +16,7 @@ do
                                                               --sum $SUBJECTS_DIR/$p/stats/aseg_editted.stats \
                                                               --pv $SUBJECTS_DIR/$p/mri/norm.mgz --empty --brainmask $SUBJECTS_DIR/$p/mri/brainmask.mgz \
                                                               --brain-vol-from-seg --excludeid 0 \
-                                                              --excl-ctxgmwm --supratent --subcortgray --in $SUBJECTS_DIR/$p/mri/norm.mgz \
+                                                              --excl-ctxgmwm --supratent --subcortgray --totalgray --in $SUBJECTS_DIR/$p/mri/norm.mgz \
                                                               --in-intensity-name norm --in-intensity-units MR \
                                                               --etiv --surf-wm-vol --surf-ctx-vol --totalgray \
                                                               --euler --ctab $PWD/license/ASegStatsLUT.txt \

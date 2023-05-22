@@ -45,7 +45,7 @@ exc_index = function(df, label, thre){
   return(list(exc, extra_df))}
 
 
-fix_typeI_seg = function(p, df, thre, label, orig, out){
+fix_typeI_seg = function(p, df, thre, label, orig, out, L){
   exc = exc_index(df, label, thre)[[1]]
   extra_df = exc_index(df, label, thre)[[2]]
   
@@ -60,8 +60,8 @@ fix_typeI_seg = function(p, df, thre, label, orig, out){
   other = (!(orig == 31 | orig == 63)) * orig
   img_edit = other + cp
   message("saving edited segmentation...........")
-  #writenii(img_edit, paste0(out, "/aseg_editted"))
-  mri_convert(img_edit, outfile = paste0(out, "/automatic_pipeline/", p, "/mri/aseg_editted.mgz"))
+  img_edit_rev = fslr::reverse_rpi_orient(img_edit, convention = L$convention, orientation = L$orientation)
+  mri_convert(img_edit_rev, outfile = paste0(out, "/automatic_pipeline/", p, "/mri/aseg_editted.mgz"))
   writenii(mask, paste0(out, "/editted/", p, "/choroid_plexus_editted_mask"))
   df$exclude_status = sapply(df$cluster, function(x){
     if(x %in% exc){return("Yes")}else{return("No")}
