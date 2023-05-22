@@ -73,6 +73,8 @@ bash code/recon_all.sh $sin_path "mprage.nii.gz"
 ```
 Note: Need to replace "/scratch" here and inside recon_all.sh to your cluster tmp directory. Be causious about how to submit a job on cluster, it might be different from PennSIVE cluster
 
+(If you met any error regarding to "ERROR: crypt() returned null with 4-line file", feel free to let me know!!)
+
 ## Type I Issue Fixing 
 
 After the Freesufer Pipeline is done for all subjects, we run the Type I Issue Fixing Step.
